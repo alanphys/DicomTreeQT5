@@ -34,6 +34,12 @@ python3 DicomTreeQT5.pyw <br>
 Open a DICOM file either from the menu or toolbar. Drag and drop from your
 favourite file manager is also supported.
 
+5 Acknowledgements
+------------------
+This code is based on scripts by:
+* Guillaume Lemaitre
+* Padraig Looney
+
 5) History
 ----------
 13/03/2019 version 0.1<br>
