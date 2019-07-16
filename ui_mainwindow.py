@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'dicomtreeQT5.ui',
 # licensing of 'dicomtreeQT5.ui' applies.
 #
-# Created: Mon Mar 11 10:01:49 2019
+# Created: Mon Jul 15 14:16:14 2019
 #      by: pyside2-uic  running on PySide2 5.12.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -36,6 +36,8 @@ class Ui_DCMTreeForm(object):
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
+        self.menuHelp = QtWidgets.QMenu(self.menubar)
+        self.menuHelp.setObjectName("menuHelp")
         DCMTreeForm.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(DCMTreeForm)
         self.statusbar.setObjectName("statusbar")
@@ -45,18 +47,22 @@ class Ui_DCMTreeForm(object):
         DCMTreeForm.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.action_Open = QtWidgets.QAction(DCMTreeForm)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("open.xpm"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/icons/Icons/ImageOpen.xpm"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.action_Open.setIcon(icon)
         self.action_Open.setObjectName("action_Open")
         self.action_Exit = QtWidgets.QAction(DCMTreeForm)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("exit.xpm"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/icons/Icons/exit.xpm"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.action_Exit.setIcon(icon1)
         self.action_Exit.setObjectName("action_Exit")
+        self.action_About = QtWidgets.QAction(DCMTreeForm)
+        self.action_About.setObjectName("action_About")
         self.menuFile.addAction(self.action_Open)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.action_Exit)
+        self.menuHelp.addAction(self.action_About)
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuHelp.menuAction())
         self.toolBar.addAction(self.action_Open)
         self.toolBar.addAction(self.action_Exit)
 
@@ -66,10 +72,13 @@ class Ui_DCMTreeForm(object):
 
     def retranslateUi(self, DCMTreeForm):
         DCMTreeForm.setWindowTitle(QtWidgets.QApplication.translate("DCMTreeForm", "Dicom Tree Viewer", None, -1))
-        self.menuFile.setTitle(QtWidgets.QApplication.translate("DCMTreeForm", "Fi&le", None, -1))
+        self.menuFile.setTitle(QtWidgets.QApplication.translate("DCMTreeForm", "&File", None, -1))
+        self.menuHelp.setTitle(QtWidgets.QApplication.translate("DCMTreeForm", "&Help", None, -1))
         self.toolBar.setWindowTitle(QtWidgets.QApplication.translate("DCMTreeForm", "toolBar", None, -1))
         self.action_Open.setText(QtWidgets.QApplication.translate("DCMTreeForm", "&Open", None, -1))
         self.action_Open.setToolTip(QtWidgets.QApplication.translate("DCMTreeForm", "Open dicom file", None, -1))
         self.action_Exit.setText(QtWidgets.QApplication.translate("DCMTreeForm", "E&xit", None, -1))
         self.action_Exit.setToolTip(QtWidgets.QApplication.translate("DCMTreeForm", "Exit program", None, -1))
+        self.action_About.setText(QtWidgets.QApplication.translate("DCMTreeForm", "&About", None, -1))
 
+import dicomtreeQT5_rc

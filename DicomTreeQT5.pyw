@@ -15,14 +15,15 @@ Or drag and drop from your file manager.
 # license : pydicom (https://github.com/pydicom/pydicom/blob/master/LICENSE)
 
 import sys
+from platform import system
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PySide2.QtCore import SIGNAL, QObject, Qt
-from PySide2.QtGui import QStandardItemModel, QStandardItem
+from PySide2.QtGui import QStandardItemModel, QStandardItem, QFont
 from ui_mainwindow import Ui_DCMTreeForm
+from aboutpackage import About
 import pydicom
 from pydicom import compat
 import os
-import collections
 
 
 class DCMTreeForm(QMainWindow):
@@ -30,8 +31,18 @@ class DCMTreeForm(QMainWindow):
         super(DCMTreeForm, self).__init__()
         self.ui = Ui_DCMTreeForm()
         self.ui.setupUi(self)
+        font = QFont()
+        os = system()
+        if os == 'Linux':
+            font.setFamily("Monospace")
+        elif os == 'Windows':
+            font.setFamily("Courier New")
+        else:
+            font.setFamily("Courier")
+        self.ui.treeView.setFont(font)
         self.ui.statusbar.showMessage('Open DICOM file or drag and drop')
         QObject.connect(self.ui.action_Open, SIGNAL('triggered()'), self.openfile)
+        QObject.connect(self.ui.action_About, SIGNAL('triggered()'), self.showabout)
 
     def openfile(self):
         if len(sys.argv) > 1:
@@ -93,6 +104,10 @@ class DCMTreeForm(QMainWindow):
             filename = url.split('/',2)[2]
             if os.path.isfile(filename):
                 self.show_tree(filename)
+
+    def showabout(self):
+        about = About()
+        about.exec()
 
 
 def main():
