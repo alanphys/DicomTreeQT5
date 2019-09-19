@@ -1,4 +1,4 @@
-DicomTreeQT5 Readme file 
+DicomTreeQT5 ver 0.12 Readme file 
 (c) 2019 AC Chamberlain
 
 1) Introduction
@@ -27,12 +27,21 @@ python3 DicomTreeQT5.pyw
 Open a DICOM file either from the menu or toolbar. Drag and drop from your
 favourite file manager is also supported.
 
-7) History
+7) Release notes
+Latest release
+Added the ability to insert, delete and modify DICOM tags and save the resulting file. Note: No checking is done on the tag values and it is not well tested.
+
+Version 0.11
+Added about package with licence details, credits and this readme.
+
+8) History
 13/03/2019 version 0.1
 20/05/2019 tidy up for GitHub
 15/07/2019 change open close icons
            add about package
 16/7/2019  fix Windows font
+17/9/2019  Add Save DICOM file
+19/9/2019  Add insert, edit and delete DICOM tags
 
 
 

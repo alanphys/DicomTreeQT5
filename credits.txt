@@ -19,5 +19,5 @@ https://www.numpy.org/
 Pyside2 and Qt for Python
 https://wiki.qt.io/Qt_for_Python
 
-Open (modified) and Exit icons By FatCow Web Hosting (Fresh-Farm)
+Icons By FatCow Web Hosting (Fresh-Farm)
 http://www.fatcow.com/free-icons/, CC BY 3.0 us, https://commons.wikimedia.org/w/index.php?curid=11522819

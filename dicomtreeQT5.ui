@@ -68,6 +68,8 @@
     </property>
     <addaction name="action_Open"/>
     <addaction name="separator"/>
+    <addaction name="action_Save"/>
+    <addaction name="actionSave_As"/>
     <addaction name="action_Exit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -76,13 +78,28 @@
     </property>
     <addaction name="action_About"/>
    </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="action_Insert"/>
+    <addaction name="action_Edit"/>
+    <addaction name="action_Delete"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu_Edit"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -91,6 +108,12 @@
     <bool>false</bool>
    </attribute>
    <addaction name="action_Open"/>
+   <addaction name="actionSave_As"/>
+   <addaction name="separator"/>
+   <addaction name="action_Insert"/>
+   <addaction name="action_Edit"/>
+   <addaction name="action_Delete"/>
+   <addaction name="separator"/>
    <addaction name="action_Exit"/>
   </widget>
   <action name="action_Open">
@@ -120,6 +143,63 @@
   <action name="action_About">
    <property name="text">
     <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="icon">
+    <iconset resource="dicomtreeQT5.qrc">
+     <normaloff>:/icons/Icons/ImageSave.xpm</normaloff>:/icons/Icons/ImageSave.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+  </action>
+  <action name="actionSave_As">
+   <property name="icon">
+    <iconset resource="dicomtreeQT5.qrc">
+     <normaloff>:/icons/Icons/ImageSave.xpm</normaloff>:/icons/Icons/ImageSave.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>Save &amp;As</string>
+   </property>
+   <property name="toolTip">
+    <string>Save DICOM file as</string>
+   </property>
+  </action>
+  <action name="action_Insert">
+   <property name="icon">
+    <iconset resource="dicomtreeQT5.qrc">
+     <normaloff>:/icons/Icons/add.xpm</normaloff>:/icons/Icons/add.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Insert</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert DICOM tag</string>
+   </property>
+  </action>
+  <action name="action_Edit">
+   <property name="icon">
+    <iconset resource="dicomtreeQT5.qrc">
+     <normaloff>:/icons/Icons/edit.xpm</normaloff>:/icons/Icons/edit.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Edit</string>
+   </property>
+   <property name="toolTip">
+    <string>Change DICOM tag value</string>
+   </property>
+  </action>
+  <action name="action_Delete">
+   <property name="icon">
+    <iconset resource="dicomtreeQT5.qrc">
+     <normaloff>:/icons/Icons/del.xpm</normaloff>:/icons/Icons/del.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete DICOM tag</string>
    </property>
   </action>
  </widget>

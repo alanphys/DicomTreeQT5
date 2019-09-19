@@ -16,7 +16,7 @@ Or drag and drop from your file manager.
 
 import sys
 from platform import system
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QInputDialog, QLineEdit
 from PySide2.QtCore import SIGNAL, QObject, Qt
 from PySide2.QtGui import QStandardItemModel, QStandardItem, QFont
 from ui_mainwindow import Ui_DCMTreeForm
@@ -31,6 +31,8 @@ class DCMTreeForm(QMainWindow):
         super(DCMTreeForm, self).__init__()
         self.ui = Ui_DCMTreeForm()
         self.ui.setupUi(self)
+        ds = None
+        filename = None
         font = QFont()
         os = system()
         if os == 'Linux':
@@ -42,25 +44,84 @@ class DCMTreeForm(QMainWindow):
         self.ui.treeView.setFont(font)
         self.ui.statusbar.showMessage('Open DICOM file or drag and drop')
         QObject.connect(self.ui.action_Open, SIGNAL('triggered()'), self.openfile)
+        QObject.connect(self.ui.action_Save, SIGNAL('triggered()'), self.savefile)
+        QObject.connect(self.ui.actionSave_As, SIGNAL('triggered()'), self.savefileas)
+        QObject.connect(self.ui.action_Insert, SIGNAL('triggered()'), self.insert_tag)
+        QObject.connect(self.ui.action_Edit, SIGNAL('triggered()'), self.edit_tag)
+        QObject.connect(self.ui.action_Delete, SIGNAL('triggered()'), self.del_tag)
         QObject.connect(self.ui.action_About, SIGNAL('triggered()'), self.showabout)
 
     def openfile(self):
         if len(sys.argv) > 1:
-            filename = sys.argv[1]
+            self.filename = sys.argv[1]
         else:
-            filename = os.path.realpath(__file__)
-        dirpath = os.path.dirname(os.path.realpath(filename))
-        filename = QFileDialog.getOpenFileName(self, 'Open DICOM file', dirpath, 'DICOM files (*.dcm);;All files (*.*)')[0]
-        self.show_tree(filename)
+            self.filename = os.path.realpath(__file__)
+        dirpath = os.path.dirname(os.path.realpath(self.filename))
+        self.filename = QFileDialog.getOpenFileName(self, 'Open DICOM file', dirpath, 'DICOM files (*.dcm);;All files (*.*)')[0]
+        self.ds = pydicom.read_file(self.filename, force=True)
+        self.show_tree()
 
-    def show_tree(self, filename):
-        ds = self.dicom_to_dataset(filename)
-        model = self.dataset_to_model(ds, filename)
+    def savefile(self):
+        self.ds.save_as(self.filename)
+
+    def savefileas(self):
+        self.filename = QFileDialog.getSaveFileName(self, 'Save DICOM file', self.filename,  'DICOM files (*.dcm);;All files (*.*)')[0]
+        self.ds.save_as(self.filename)
+
+    def insert_tag(self):
+        index = self.ui.treeView.currentIndex()
+        tagtext = self.ui.treeView.model().itemData(index)[0]
+        InputDlg = QInputDialog(self)
+        InputDlg.setInputMode(QInputDialog.TextInput)
+        InputDlg.resize(500,100)
+        InputDlg.setLabelText('Create new tag as: (Group, Element) Keyword VR: Value')
+        InputDlg.setTextValue('')
+        InputDlg.setWindowTitle('Change DICOM tag')
+        ok = InputDlg.exec_()
+        tagtext = InputDlg.textValue()
+        if ok and tagtext != '':
+            tag_no = '0x' + tagtext[1:5] + tagtext[7:11]
+            VR = tagtext.split(':')[0][-2:]
+            tag_value = tagtext.split(':')[1][1:].strip("'")
+            if tag_value[0] == '[':
+                tag_value = tag_value.translate({ord(i): None for i in "[]'"}).split(',')
+            print(VR, tag_value)
+            self.ds.add_new(tag_no, VR, tag_value)
+            self.show_tree()
+
+    def edit_tag(self):
+        index = self.ui.treeView.currentIndex()
+        tagtext = self.ui.treeView.model().itemData(index)[0]
+        tag_group = '0x' + tagtext[1:5]
+        tag_element = '0x' + tagtext[7:11]
+        tag_group_int = int(tag_group, 16)
+        tag_element_int = int(tag_element, 16)
+        InputDlg = QInputDialog(self)
+        InputDlg.setInputMode(QInputDialog.TextInput)
+        InputDlg.resize(500, 100)
+        InputDlg.setLabelText('Change value:')
+        InputDlg.setTextValue(str(self.ds[tag_group_int,tag_element_int].value))
+        InputDlg.setWindowTitle('Change DICOM tag')
+        ok = InputDlg.exec_()
+        tagtext = InputDlg.textValue()
+        if ok and tagtext != '':
+            self.ds[tag_group_int,tag_element_int].value = tagtext
+            self.show_tree()
+
+    def del_tag(self):
+        index = self.ui.treeView.currentIndex()
+        tagtext = self.ui.treeView.model().itemData(index)[0]
+        tag_group = '0x' + tagtext[1:5]
+        tag_element = '0x' + tagtext[7:11]
+        tag_group_int = int(tag_group, 16)
+        tag_element_int = int(tag_element, 16)
+        if tagtext != '':
+            del self.ds[tag_group_int,tag_element_int]
+            self.show_tree()
+
+    def show_tree(self):
+        model = self.dataset_to_model(self.ds, self.filename)
         self.display(model)
-
-    def dicom_to_dataset(self, filename):
-        dataset = pydicom.read_file(filename, force=True)
-        return dataset
 
     def display(self, model):
         self.ui.treeView.setModel(model)
