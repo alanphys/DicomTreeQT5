@@ -175,8 +175,9 @@ def main():
     app = QApplication(sys.argv)
     window = DCMTreeForm()
     if len(sys.argv) > 1:
-        filename = sys.argv[1]
-        window.show_tree(filename)
+        window.filename = sys.argv[1]
+        window.ds = pydicom.read_file(window.filename, force=True)
+        window.show_tree()
     window.show()
     sys.exit(app.exec_())
 
