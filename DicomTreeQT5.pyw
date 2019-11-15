@@ -96,15 +96,20 @@ class DCMTreeForm(QMainWindow):
         tag_element = '0x' + tagtext[7:11]
         tag_group_int = int(tag_group, 16)
         tag_element_int = int(tag_element, 16)
+        tag_vr = tagtext.split(':')[0][-2:]
+        tag_keyword = tagtext.split(':')[0][13:-2].strip()
         InputDlg = QInputDialog(self)
         InputDlg.setInputMode(QInputDialog.TextInput)
         InputDlg.resize(500, 100)
-        InputDlg.setLabelText('Change value:')
+        InputDlg.setLabelText('Change value for (' + tag_group + ', ' + tag_element + ') ' + tag_keyword + ' ' + tag_vr + ':')
         InputDlg.setTextValue(str(self.ds[tag_group_int,tag_element_int].value))
         InputDlg.setWindowTitle('Change DICOM tag')
         ok = InputDlg.exec_()
         tagtext = InputDlg.textValue()
         if ok and tagtext != '':
+            if tag_vr == 'DS':
+                if tagtext[0] == '[':
+                    tagtext = tagtext.translate({ord(i): None for i in "[]'"}).split(',')
             self.ds[tag_group_int,tag_element_int].value = tagtext
             self.show_tree()
 

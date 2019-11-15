@@ -42,6 +42,8 @@ Added about package with licence details, credits and this readme.
 16/7/2019  fix Windows font
 17/9/2019  Add Save DICOM file
 19/9/2019  Add insert, edit and delete DICOM tags
+12/11/2019 Fix open file from command line
+14/11/2019 Fix edit decimal string tag
 
 
 
