@@ -17,7 +17,7 @@ Or drag and drop from your file manager.
 import sys
 from platform import system
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QInputDialog, QLineEdit
-from PySide2.QtCore import SIGNAL, QObject, Qt
+from PySide2.QtCore import SIGNAL, QObject, Qt, QSortFilterProxyModel
 from PySide2.QtGui import QStandardItemModel, QStandardItem, QFont
 from ui_mainwindow import Ui_DCMTreeForm
 from aboutpackage import About
@@ -31,8 +31,10 @@ class DCMTreeForm(QMainWindow):
         super(DCMTreeForm, self).__init__()
         self.ui = Ui_DCMTreeForm()
         self.ui.setupUi(self)
-        ds = None
-        filename = None
+        self.ds = None
+        self.filename = None
+        self.source_model = QStandardItemModel()
+        self.proxy_model = QSortFilterProxyModel()
         font = QFont()
         os = system()
         if os == 'Linux':
@@ -42,14 +44,24 @@ class DCMTreeForm(QMainWindow):
         else:
             font.setFamily("Courier")
         self.ui.treeView.setFont(font)
+        self.ui.fsearchbar.setVisible(False)
+        self.ui.treeView.addAction(self.ui.action_Copy)
+        self.ui.treeView.addAction(self.ui.actionSelect_All)
+        self.ui.treeView.addAction(self.ui.actionClear_selection)
+        self.ui.treeView.addAction(self.ui.action_Find_tag)
         self.ui.statusbar.showMessage('Open DICOM file or drag and drop')
-        QObject.connect(self.ui.action_Open, SIGNAL('triggered()'), self.openfile)
-        QObject.connect(self.ui.action_Save, SIGNAL('triggered()'), self.savefile)
-        QObject.connect(self.ui.actionSave_As, SIGNAL('triggered()'), self.savefileas)
-        QObject.connect(self.ui.action_Insert, SIGNAL('triggered()'), self.insert_tag)
-        QObject.connect(self.ui.action_Edit, SIGNAL('triggered()'), self.edit_tag)
-        QObject.connect(self.ui.action_Delete, SIGNAL('triggered()'), self.del_tag)
-        QObject.connect(self.ui.action_About, SIGNAL('triggered()'), self.showabout)
+        self.ui.action_Open.triggered.connect(self.openfile)
+        self.ui.action_Save.triggered.connect(self.savefile)
+        self.ui.actionSave_As.triggered.connect(self.savefileas)
+        self.ui.action_Copy.triggered.connect(self.copy_tag)
+        self.ui.actionSelect_All.triggered.connect(self.selectall_tags)
+        self.ui.actionClear_selection.triggered.connect(self.clearall_tags)
+        self.ui.action_Find_tag.triggered.connect(self.find_tag)
+        self.ui.qle_filter_tag.textChanged.connect(self.filter_tag)
+        self.ui.action_Insert.triggered.connect(self.insert_tag)
+        self.ui.action_Edit.triggered.connect(self.edit_tag)
+        self.ui.action_Delete.triggered.connect(self.del_tag)
+        self.ui.action_About.triggered.connect(self.showabout)
 
     def openfile(self):
         if len(sys.argv) > 1:
@@ -67,6 +79,38 @@ class DCMTreeForm(QMainWindow):
     def savefileas(self):
         self.filename = QFileDialog.getSaveFileName(self, 'Save DICOM file', self.filename,  'DICOM files (*.dcm);;All files (*.*)')[0]
         self.ds.save_as(self.filename)
+
+    def copy_tag(self):
+        clipboard = QApplication.clipboard()
+        selected_tags = ''
+        for index in self.ui.treeView.selectedIndexes():
+            selected_tags = selected_tags + self.ui.treeView.model().itemData(index)[0] + '\n'
+        clipboard.setText(selected_tags)
+
+    def selectall_tags(self):
+        self.ui.treeView.selectAll()
+
+    def clearall_tags(self):
+        self.ui.treeView.clearSelection()
+
+    def find_tag(self):
+        if self.ui.fsearchbar.isEnabled():
+            self.ui.qle_filter_tag.setText('')
+            self.ui.fsearchbar.setVisible(False)
+            self.ui.fsearchbar.setEnabled(False)
+            self.ui.action_Find_tag.setText('Show &Filter bar')
+        else:
+            self.ui.fsearchbar.setVisible(True)
+            self.ui.fsearchbar.setEnabled(True)
+            self.ui.action_Find_tag.setText('Hide &Filter bar')
+
+    def filter_tag(self):
+        """Select tags that contain requested text"""
+        tag_to_find = self.ui.qle_filter_tag.text()
+        if tag_to_find != '':
+            self.proxy_model.setFilterRegularExpression(tag_to_find)
+        else:
+            self.proxy_model.setFilterRegularExpression('')
 
     def insert_tag(self):
         index = self.ui.treeView.currentIndex()
@@ -125,21 +169,19 @@ class DCMTreeForm(QMainWindow):
             self.show_tree()
 
     def show_tree(self):
-        model = self.dataset_to_model(self.ds, self.filename)
-        self.display(model)
-
-    def display(self, model):
-        self.ui.treeView.setModel(model)
+        self.dataset_to_model()
+        self.proxy_model.setSourceModel(self.source_model)
+        self.ui.treeView.setModel(self.proxy_model)
         self.ui.treeView.show()
 
-    def dataset_to_model(self, dataset, filename):
-        model = QStandardItemModel()
+    def dataset_to_model(self):
+        self.source_model.clear()
         model_header = list()
-        model_header.append(filename)
-        model.setHorizontalHeaderLabels(model_header)
-        parent_item = model.invisibleRootItem()
-        self.recurse_tree(model, dataset, parent_item)
-        return model
+        model_header.append(self.filename)
+        self.source_model.setHorizontalHeaderLabels(model_header)
+        parent_item = self.source_model.invisibleRootItem()
+        self.recurse_tree(self.source_model, self.ds, parent_item)
+        return
 
     def recurse_tree(self, model, dataset, parent):
         # order the dicom tags
@@ -158,18 +200,23 @@ class DCMTreeForm(QMainWindow):
                     self.recurse_tree(model, dataset, item)
 
     def dragEnterEvent(self, event):
-        if event.mimeData().hasText():
+        if event.mimeData().hasUrls():
             event.setDropAction(Qt.CopyAction)
             event.accept()
         else:
             event.ignore()
 
     def dropEvent(self, event):
-        if event.mimeData().hasText():
-            url = event.mimeData().text()
-            filename = url.split('/',2)[2]
+        if event.mimeData().hasUrls():
+            if len(event.mimeData().urls()) > 1:
+                self.ui.statusbar.showMessage('Warning! More than one file was passed.')
+            filename = str(event.mimeData().urls()[0].toLocalFile())
             if os.path.isfile(filename):
-                self.show_tree(filename)
+                self.filename = filename
+                self.ds = pydicom.read_file(self.filename, force=True)
+                self.show_tree()
+            else:
+                self.ui.statusbar.showMessage("Sorry, couldn't open the file!")
 
     def showabout(self):
         about = About()

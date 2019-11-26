@@ -17,6 +17,9 @@
    <string>Dicom Tree Viewer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
      <number>0</number>
@@ -31,25 +34,113 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QTreeView" name="treeView">
-      <property name="font">
-       <font>
-        <family>Monospace</family>
-       </font>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="leftMargin">
+       <number>2</number>
       </property>
-      <property name="acceptDrops">
-       <bool>true</bool>
+      <property name="topMargin">
+       <number>2</number>
       </property>
-      <property name="dragDropOverwriteMode">
-       <bool>true</bool>
-      </property>
-      <property name="dragDropMode">
-       <enum>QAbstractItemView::DragDrop</enum>
-      </property>
-      <property name="defaultDropAction">
-       <enum>Qt::CopyAction</enum>
-      </property>
-     </widget>
+      <item>
+       <widget class="QFrame" name="fsearchbar">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QWidget" name="">
+         <property name="geometry">
+          <rect>
+           <x>2</x>
+           <y>2</y>
+           <width>781</width>
+           <height>27</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Filter DICOM tags:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="qle_filter_tag">
+            <property name="placeholderText">
+             <string>Enter filter string</string>
+            </property>
+            <property name="clearButtonEnabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTreeView" name="treeView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>Monospace</family>
+         </font>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::ActionsContextMenu</enum>
+        </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
+        <property name="dragDropOverwriteMode">
+         <bool>true</bool>
+        </property>
+        <property name="dragDropMode">
+         <enum>QAbstractItemView::DragDrop</enum>
+        </property>
+        <property name="defaultDropAction">
+         <enum>Qt::CopyAction</enum>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>false</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -82,6 +173,12 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="action_Copy"/>
+    <addaction name="actionSelect_All"/>
+    <addaction name="actionClear_selection"/>
+    <addaction name="separator"/>
+    <addaction name="action_Find_tag"/>
+    <addaction name="separator"/>
     <addaction name="action_Insert"/>
     <addaction name="action_Edit"/>
     <addaction name="action_Delete"/>
@@ -113,6 +210,8 @@
    <addaction name="action_Insert"/>
    <addaction name="action_Edit"/>
    <addaction name="action_Delete"/>
+   <addaction name="separator"/>
+   <addaction name="action_Find_tag"/>
    <addaction name="separator"/>
    <addaction name="action_Exit"/>
   </widget>
@@ -200,6 +299,42 @@
    </property>
    <property name="toolTip">
     <string>Delete DICOM tag</string>
+   </property>
+  </action>
+  <action name="actionSelect_All">
+   <property name="text">
+    <string>Select &amp;All</string>
+   </property>
+   <property name="toolTip">
+    <string>Select all tags</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_Copy">
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionClear_selection">
+   <property name="text">
+    <string>Clear selection</string>
+   </property>
+  </action>
+  <action name="action_Find_tag">
+   <property name="icon">
+    <iconset resource="dicomtreeQT5.qrc">
+     <normaloff>:/icons/Icons/search.xpm</normaloff>:/icons/Icons/search.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>Show &amp;Filter bar</string>
    </property>
   </action>
  </widget>

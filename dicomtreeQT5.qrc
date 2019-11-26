@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>Icons/search.xpm</file>
     <file>Icons/del.xpm</file>
     <file>Icons/add.xpm</file>
     <file>Icons/edit.xpm</file>
