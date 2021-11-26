@@ -180,24 +180,36 @@ class DCMTreeForm(QMainWindow):
         model_header.append(self.filename)
         self.source_model.setHorizontalHeaderLabels(model_header)
         parent_item = self.source_model.invisibleRootItem()
+        self.write_header(self.source_model, self.ds, parent_item)
         self.recurse_tree(self.source_model, self.ds, parent_item)
         return
 
-    def recurse_tree(self, model, dataset, parent):
+    def write_header(self, model, ds, parent):
+        # write meta data
+        fm = ds.file_meta
+        for data_element in fm:
+            if isinstance(data_element.value, compat.text_type):
+                item = QStandardItem(compat.text_type(data_element))
+            else:
+                item = QStandardItem(str(data_element))
+            parent.appendRow(item)
+
+    def recurse_tree(self, model, ds, parent):
         # order the dicom tags
-        for data_element in dataset:
+        # write data elements
+        for data_element in ds:
             if isinstance(data_element.value, compat.text_type):
                 item = QStandardItem(compat.text_type(data_element))
             else:
                 item = QStandardItem(str(data_element))
             parent.appendRow(item)
             if data_element.VR == "SQ":   # a sequence
-                for i, dataset in enumerate(data_element.value):
+                for i, ds in enumerate(data_element.value):
                     sq_item_description = data_element.name.replace(" Sequence", "")  # XXX not i18n
                     item_text = "{0:s} {1:d}".format(sq_item_description, i + 1)
                     item = QStandardItem(item_text)
                     parent.appendRow(item)
-                    self.recurse_tree(model, dataset, item)
+                    self.recurse_tree(model, ds, item)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
