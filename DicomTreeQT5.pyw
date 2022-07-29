@@ -49,6 +49,8 @@ class DCMTreeForm(QMainWindow):
         self.ui.treeView.addAction(self.ui.actionSelect_All)
         self.ui.treeView.addAction(self.ui.actionClear_selection)
         self.ui.treeView.addAction(self.ui.action_Find_tag)
+        self.ui.treeView.addAction(self.ui.actionExpand_all)
+        self.ui.treeView.addAction(self.ui.actionCollapse_all)
         self.ui.statusbar.showMessage('Open DICOM file or drag and drop')
         self.ui.action_Open.triggered.connect(self.openfile)
         self.ui.action_Save.triggered.connect(self.savefile)
@@ -56,6 +58,8 @@ class DCMTreeForm(QMainWindow):
         self.ui.action_Copy.triggered.connect(self.copy_tag)
         self.ui.actionSelect_All.triggered.connect(self.selectall_tags)
         self.ui.actionClear_selection.triggered.connect(self.clearall_tags)
+        self.ui.actionExpand_all.triggered.connect(self.expandall_tags)
+        self.ui.actionCollapse_all.triggered.connect(self.collapseall_tags)
         self.ui.action_Find_tag.triggered.connect(self.find_tag)
         self.ui.qle_filter_tag.textChanged.connect(self.filter_tag)
         self.ui.action_Insert.triggered.connect(self.insert_tag)
@@ -92,6 +96,12 @@ class DCMTreeForm(QMainWindow):
 
     def clearall_tags(self):
         self.ui.treeView.clearSelection()
+
+    def expandall_tags(self):
+        self.ui.treeView.expandAll()
+
+    def collapseall_tags(self):
+        self.ui.treeView.collapseAll()
 
     def find_tag(self):
         if self.ui.fsearchbar.isEnabled():
