@@ -112,12 +112,16 @@ class DCMTreeForm(QMainWindow):
         else:
             self.ui.fsearchbar.setVisible(True)
             self.ui.fsearchbar.setEnabled(True)
+            self.ui.fsearchbar.activateWindow()
+            self.ui.fsearchbar.setFocus()
             self.ui.action_Find_tag.setText('Hide &Filter bar')
 
     def filter_tag(self):
         """Select tags that contain requested text"""
         tag_to_find = self.ui.qle_filter_tag.text()
         if tag_to_find != '':
+            self.proxy_model.setFilterKeyColumn(-1)
+            self.proxy_model.setRecursiveFilteringEnabled(True)
             self.proxy_model.setFilterRegularExpression(tag_to_find)
         else:
             self.proxy_model.setFilterRegularExpression('')
