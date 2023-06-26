@@ -113,7 +113,7 @@ class DCMTreeForm(QMainWindow):
             self.ui.fsearchbar.setVisible(True)
             self.ui.fsearchbar.setEnabled(True)
             self.ui.fsearchbar.activateWindow()
-            self.ui.fsearchbar.setFocus()
+            self.ui.qle_filter_tag.setFocus()
             self.ui.action_Find_tag.setText('Hide &Filter bar')
 
     def filter_tag(self):
