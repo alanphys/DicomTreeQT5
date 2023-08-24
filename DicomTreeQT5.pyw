@@ -10,7 +10,7 @@ Or drag and drop from your file manager.
 """
 
 # author : AC Chamberlain <alanphys@yahoo.co.uk>
-# copyright: AC Chamberlain (c) 2019
+# copyright: AC Chamberlain (c) 2019-2023
 # based on the scripts by Guillaume Lemaitre and Padraig Looney
 # license : pydicom (https://github.com/pydicom/pydicom/blob/master/LICENSE)
 

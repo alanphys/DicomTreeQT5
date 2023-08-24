@@ -3,14 +3,14 @@
 ################################################################################
 ## Form generated from reading UI file 'dicomtreeQT5.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.15.3
+## Created by: Qt User Interface Compiler version 5.15.10
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide2.QtCore import *  # type: ignore
+from PySide2.QtGui import *  # type: ignore
+from PySide2.QtWidgets import *  # type: ignore
 
 import dicomtreeQT5_rc
 
@@ -43,17 +43,17 @@ class Ui_DCMTreeForm(object):
         self.action_Insert = QAction(DCMTreeForm)
         self.action_Insert.setObjectName(u"action_Insert")
         icon3 = QIcon()
-        icon3.addFile(u":/icons/Icons/add.xpm", QSize(), QIcon.Normal, QIcon.Off)
+        icon3.addFile(u":/icons/Icons/Farm-Fresh_tag_blue_add.png", QSize(), QIcon.Normal, QIcon.Off)
         self.action_Insert.setIcon(icon3)
         self.action_Edit = QAction(DCMTreeForm)
         self.action_Edit.setObjectName(u"action_Edit")
         icon4 = QIcon()
-        icon4.addFile(u":/icons/Icons/edit.xpm", QSize(), QIcon.Normal, QIcon.Off)
+        icon4.addFile(u":/icons/Icons/Farm-Fresh_tag_blue_edit.png", QSize(), QIcon.Normal, QIcon.Off)
         self.action_Edit.setIcon(icon4)
         self.action_Delete = QAction(DCMTreeForm)
         self.action_Delete.setObjectName(u"action_Delete")
         icon5 = QIcon()
-        icon5.addFile(u":/icons/Icons/del.xpm", QSize(), QIcon.Normal, QIcon.Off)
+        icon5.addFile(u":/icons/Icons/Farm-Fresh_tag_blue_delete.png", QSize(), QIcon.Normal, QIcon.Off)
         self.action_Delete.setIcon(icon5)
         self.actionSelect_All = QAction(DCMTreeForm)
         self.actionSelect_All.setObjectName(u"actionSelect_All")

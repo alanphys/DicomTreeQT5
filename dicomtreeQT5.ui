@@ -270,7 +270,7 @@
   <action name="action_Insert">
    <property name="icon">
     <iconset resource="dicomtreeQT5.qrc">
-     <normaloff>:/icons/Icons/add.xpm</normaloff>:/icons/Icons/add.xpm</iconset>
+     <normaloff>:/icons/Icons/Farm-Fresh_tag_blue_add.png</normaloff>:/icons/Icons/Farm-Fresh_tag_blue_add.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Insert</string>
@@ -282,7 +282,7 @@
   <action name="action_Edit">
    <property name="icon">
     <iconset resource="dicomtreeQT5.qrc">
-     <normaloff>:/icons/Icons/edit.xpm</normaloff>:/icons/Icons/edit.xpm</iconset>
+     <normaloff>:/icons/Icons/Farm-Fresh_tag_blue_edit.png</normaloff>:/icons/Icons/Farm-Fresh_tag_blue_edit.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Edit</string>
@@ -294,7 +294,7 @@
   <action name="action_Delete">
    <property name="icon">
     <iconset resource="dicomtreeQT5.qrc">
-     <normaloff>:/icons/Icons/del.xpm</normaloff>:/icons/Icons/del.xpm</iconset>
+     <normaloff>:/icons/Icons/Farm-Fresh_tag_blue_delete.png</normaloff>:/icons/Icons/Farm-Fresh_tag_blue_delete.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Delete</string>
