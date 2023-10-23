@@ -73,7 +73,8 @@ class DCMTreeForm(QMainWindow):
         else:
             self.filename = os.path.realpath(__file__)
         dirpath = os.path.dirname(os.path.realpath(self.filename))
-        self.filename = QFileDialog.getOpenFileName(self, 'Open DICOM file', dirpath, 'DICOM files (*.dcm);;All files (*.*)')[0]
+        self.filename = QFileDialog.getOpenFileName(self, 'Open DICOM file', dirpath,
+                                                    'DICOM files (*.dcm *.2);;All files (*.*)')[0]
         self.ds = pydicom.read_file(self.filename, force=True)
         self.show_tree()
 
@@ -149,26 +150,28 @@ class DCMTreeForm(QMainWindow):
 
     def edit_tag(self):
         index = self.ui.treeView.currentIndex()
-        tagtext = self.ui.treeView.model().itemData(index)[0]
-        tag_group = '0x' + tagtext[1:5]
-        tag_element = '0x' + tagtext[7:11]
+        tag_item = self.ui.treeView.model().itemData(index)
+        tag_text = tag_item[0]
+        tag_group = '0x' + tag_text[1:5]
+        tag_element = '0x' + tag_text[7:11]
         tag_group_int = int(tag_group, 16)
         tag_element_int = int(tag_element, 16)
-        tag_vr = tagtext.split(':')[0][-2:]
-        tag_keyword = tagtext.split(':')[0][13:-2].strip()
+        tag_vr = tag_text.split(':')[0][-2:]
+        tag_keyword = tag_text.split(':')[0][13:-2].strip()
+        tag_value = tag_text.split(':')[1].strip()
         InputDlg = QInputDialog(self)
         InputDlg.setInputMode(QInputDialog.TextInput)
         InputDlg.resize(500, 100)
         InputDlg.setLabelText('Change value for (' + tag_group + ', ' + tag_element + ') ' + tag_keyword + ' ' + tag_vr + ':')
-        InputDlg.setTextValue(str(self.ds[tag_group_int,tag_element_int].value))
+        InputDlg.setTextValue(str(tag_value))
         InputDlg.setWindowTitle('Change DICOM tag')
         ok = InputDlg.exec_()
-        tagtext = InputDlg.textValue()
-        if ok and tagtext != '':
+        tag_text = InputDlg.textValue()
+        if ok and tag_text != '':
             if tag_vr == 'DS':
-                if tagtext[0] == '[':
-                    tagtext = tagtext.translate({ord(i): None for i in "[]'"}).split(',')
-            self.ds[tag_group_int,tag_element_int].value = tagtext
+                if tag_text[0] == '[':
+                    tag_text = tag_text.translate({ord(i): None for i in "[]'"}).split(',')
+            self.ds[tag_group_int,tag_element_int].value = tag_text
             self.show_tree()
 
     def del_tag(self):
