@@ -1,5 +1,6 @@
-DicomTreeQT5 ver 0.13 Readme file 
-(c) 2019 AC Chamberlain
+DicomTreeQT5 ver 0.13 Readme file (c) 2019 AC Chamberlain
+
+Note: The DicomTreeQT5 code has been incorporated in LinaQA and this repository is deprecated.
 
 1) Introduction
 There are many DICOM tag viewers available. None of them seem to do exactly what I want, therefore this simple app.
